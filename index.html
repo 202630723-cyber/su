@@ -3,38 +3,797 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🤡 병맛.exe - 정상적인 사람 출입금지</title>
+    <title>⚡ 도파민 임팩트: 세계선 구원 가챠 ⚡</title>
     <style>
-        * {
-            box-sizing: border-box;
+        :root {
+            --bg-color: #080711;
+            --card-bg: #131124;
+            --primary-neon: #00f3ff;
+            --secondary-neon: #ff007f;
+            --gold-neon: #ffe600;
+            --ur-color: #a100ff;
+            --text-color: #ffffff;
         }
 
-        html {
-            scroll-behavior: smooth;
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         body {
             margin: 0;
-            font-family: Arial, "Malgun Gothic", sans-serif;
-            color: #fff;
-            background:
-                radial-gradient(circle at 10% 20%, #ff00cc55 0 5%, transparent 6%),
-                radial-gradient(circle at 90% 70%, #00ffff44 0 6%, transparent 7%),
-                linear-gradient(135deg, #12002f, #001b44, #24001f);
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
-        body.dark {
-            filter: grayscale(0.7) contrast(1.2);
+        /* ----- Canvas Overlay for Particles ----- */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 99999;
         }
 
+        /* ----- Header & Top Bar ----- */
         header {
+            background: rgba(19, 17, 36, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid var(--primary-neon);
+            padding: 12px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        }
+
+        .title-logo {
+            font-size: 1.3rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--primary-neon), var(--secondary-neon));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
+        }
+
+        .currency-container {
+            display: flex;
+            gap: 15px;
+        }
+
+        .currency-badge {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.8);
+        }
+
+        .gem-text { color: var(--primary-neon); text-shadow: 0 0 8px var(--primary-neon); }
+        .gold-text { color: var(--gold-neon); text-shadow: 0 0 8px var(--gold-neon); }
+
+        /* ----- Nav Tabs ----- */
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px;
+            background: #0f0d1d;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #888;
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover, .tab-btn.active {
+            background: var(--secondary-neon);
+            color: #fff;
+            border-color: var(--secondary-neon);
+            box-shadow: 0 0 15px var(--secondary-neon);
+            transform: translateY(-2px);
+        }
+
+        /* ----- Main Content Panels ----- */
+        main {
+            flex: 1;
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .panel { display: none; }
+        .panel.active { display: block; }
+
+        /* ----- Gacha Banner & UI ----- */
+        .gacha-banner {
             position: relative;
-            padding: 35px 15px;
+            background: linear-gradient(135deg, #1f0036, #001f3f);
+            border: 3px solid var(--gold-neon);
+            border-radius: 20px;
+            padding: 30px 20px;
             text-align: center;
+            box-shadow: 0 0 35px rgba(255, 230, 0, 0.25);
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .gacha-banner::before {
+            content: "RATE UP 500%";
+            position: absolute;
+            top: 15px;
+            right: -35px;
+            background: var(--secondary-neon);
+            color: #fff;
+            font-weight: 900;
+            padding: 5px 40px;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            box-shadow: 0 0 10px var(--secondary-neon);
+        }
+
+        .banner-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--gold-neon);
+            text-shadow: 3px 3px 0 #000, 0 0 20px var(--gold-neon);
+            margin: 0 0 10px 0;
+        }
+
+        .banner-sub {
+            font-size: 1rem;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .pity-bar-wrapper {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            height: 22px;
+            width: 80%;
+            margin: 15px auto;
+            border: 1px solid rgba(255,255,255,0.2);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .pity-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-neon), var(--secondary-neon));
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 15px var(--secondary-neon);
+        }
+
+        .pity-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .gacha-btn {
+            background: linear-gradient(180deg, #ffe600, #ff8800);
+            border: none;
+            color: #000;
+            font-weight: 900;
+            font-size: 1.2rem;
+            padding: 16px 32px;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #995200, 0 0 20px rgba(255, 230, 0, 0.4);
+            transition: all 0.1s;
+        }
+
+        .gacha-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #995200;
+        }
+
+        .gacha-btn.multi {
+            background: linear-gradient(180deg, #ff007f, #a100ff);
+            color: #fff;
+            box-shadow: 0 6px 0 #5e0099, 0 0 20px rgba(255, 0, 127, 0.4);
+        }
+
+        /* ----- Mining / Clicker Panel ----- */
+        .clicker-box {
+            text-align: center;
+            background: var(--card-bg);
+            border: 2px dashed var(--primary-neon);
+            border-radius: 20px;
+            padding: 40px 20px;
+        }
+
+        .mine-orb {
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--primary-neon) 0%, rgba(0, 243, 255, 0.1) 70%);
+            border: 4px solid var(--primary-neon);
+            box-shadow: 0 0 40px var(--primary-neon);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            cursor: pointer;
+            transition: transform 0.05s;
+        }
+
+        .mine-orb:active {
+            transform: scale(0.92);
+        }
+
+        /* ----- Collection Codex Grid ----- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+        }
+
+        .card-item {
+            background: var(--card-bg);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .card-item:hover { transform: translateY(-50px); }
+        .card-item.unowned { filter: grayscale(1) opacity(0.4); }
+
+        .card-item.UR { border-color: var(--ur-color); box-shadow: 0 0 15px var(--ur-color); }
+        .card-item.SSR { border-color: var(--gold-neon); box-shadow: 0 0 12px var(--gold-neon); }
+        .card-item.SR { border-color: #a100ff; }
+        .card-item.R { border-color: var(--primary-neon); }
+
+        .badge-rarity {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 0.7rem;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #000;
+        }
+
+        .badge-UR { background: var(--ur-color); color: #fff; }
+        .badge-SSR { background: var(--gold-neon); }
+        .badge-SR { background: #a100ff; color: #fff; }
+        .badge-R { background: var(--primary-neon); }
+        .badge-N { background: #777; color: #fff; }
+
+        .card-emoji { font-size: 2.8rem; margin: 10px 0 5px 0; }
+        .card-name { font-size: 0.85rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-count { font-size: 0.75rem; color: #aaa; margin-top: 4px; }
+
+        /* ----- Fullscreen Gacha Cutscene Overlay ----- */
+        #gachaOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             background: #000;
-            border-bottom: 5px solid #ff00ff;
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cutscene-door {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 8px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            transition: all 0.5s ease;
+            box-shadow: 0 0 0px #000;
+        }
+
+        .result-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .result-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        /* ----- Animations & FX ----- */
+        .shake-screen { animation: screenShake 0.4s infinite; }
+
+        @keyframes screenShake {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-10px, 8px) rotate(-1deg); }
+            40% { transform: translate(10px, -8px) rotate(1deg); }
+            60% { transform: translate(-8px, -5px) rotate(-1deg); }
+            80% { transform: translate(8px, 5px) rotate(1deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        /* Toast Popup */
+        #toastContainer {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: #000;
+            border: 2px solid var(--gold-neon);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 800;
+            box-shadow: 0 0 15px rgba(255, 230, 0, 0.4);
+            animation: slideIn 0.3s forwards;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Top Bar Header -->
+    <header>
+        <div class="title-logo">⚡ DOPAMINE GACHA</div>
+        <div class="currency-container">
+            <div class="currency-badge">
+                💎 <span id="gemDisplay" class="gem-text">10,000</span>
+            </div>
+            <div class="currency-badge">
+                🪙 <span id="goldDisplay" class="gold-text">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav>
+        <button class="tab-btn active" onclick="switchTab('gacha')">🎰 소환 (가챠)</button>
+        <button class="tab-btn" onclick="switchTab('mine')">⛏️ 도파민 광산</button>
+        <button class="tab-btn" onclick="switchTab('collection')">📖 도감 (<span id="collectionCount">0</span>)</button>
+    </nav>
+
+    <!-- Main Container -->
+    <main>
+        <!-- 1. GACHA TAB -->
+        <section id="gachaPanel" class="panel active">
+            <div class="gacha-banner">
+                <h1 class="banner-title">🔥 [UR] 신성한 석상좌 한정 소환</h1>
+                <p class="banner-sub">UR 확률 0.5% | SSR 확률 3% | 100회 천장 보장!</p>
+                
+                <div class="pity-bar-wrapper">
+                    <div id="pityFill" class="pity-bar-fill"></div>
+                    <div class="pity-text">UR 확정 천장까지: <span id="pityCount">100</span>회 남음</div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="gacha-btn" onclick="pullGacha(1)">
+                        1회 소환<br><small>💎 160</small>
+                    </button>
+                    <button class="gacha-btn multi" onclick="pullGacha(10)">
+                        🔥 10회 연속 소환<br><small>💎 1,600</small>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. MINING TAB -->
+        <section id="minePanel" class="panel">
+            <div class="clicker-box">
+                <h2>⚡ 광기의 도파민 반응로</h2>
+                <p>구체를 클릭하여 보석(💎)을 채굴하세요!</p>
+                <div class="mine-orb" onclick="clickMine(event)">💎</div>
+                <h3>누적 채굴한 젬: <span id="minedGemsText" class="gem-text">0</span></h3>
+            </div>
+        </section>
+
+        <!-- 3. COLLECTION TAB -->
+        <section id="collectionPanel" class="panel">
+            <h2 style="margin-bottom: 20px;">📜 수집한 영웅 도감</h2>
+            <div id="gridContainer" class="grid-container"></div>
+        </section>
+    </main>
+
+    <!-- Fullscreen Cutscene Gacha Overlay -->
+    <div id="gachaOverlay">
+        <div id="cutsceneStage">
+            <div id="cutsceneDoor" class="cutscene-door">🚪</div>
+            <p id="cutsceneText" style="text-align: center; margin-top: 20px; font-weight: 900; font-size: 1.5rem;"></p>
+        </div>
+
+        <div id="resultScreen" class="result-screen">
+            <h2 style="color: var(--gold-neon); font-size: 2rem; margin: 0;">🎉 소환 결과 🎉</h2>
+            <div id="resultGrid" class="result-grid"></div>
+            <button class="gacha-btn" onclick="closeGachaOverlay()">확인 및 계속하기</button>
+        </div>
+    </div>
+
+    <div id="toastContainer"></div>
+
+    <script>
+        /* ==========================================================================
+           1. GAME DATA & DATABASE
+           ========================================================================== */
+        const CHARACTER_DB = [
+            // UR (0.5%)
+            { id: 'ur_1', name: '[UR] 전지전능 갓-석상', rarity: 'UR', emoji: '🗿', power: 99999 },
+            { id: 'ur_2', name: '[UR] 흑염룡 개구리', rarity: 'UR', emoji: '🐸', power: 88888 },
+            // SSR (3%)
+            { id: 'ssr_1', name: '[SSR] 황금 머슬 오리', rarity: 'SSR', emoji: '🦆', power: 12000 },
+            { id: 'ssr_2', name: '[SSR] 우주 폭주 빵', rarity: 'SSR', emoji: '🍞', power: 11000 },
+            { id: 'ssr_3', name: '[SSR] 심연의 해골마왕', rarity: 'SSR', emoji: '💀', power: 10500 },
+            // SR (15%)
+            { id: 'sr_1', name: '[SR] 광기 어린 광대', rarity: 'SR', emoji: '🤡', power: 3000 },
+            { id: 'sr_2', name: '[SR] 비트코인 연구원', rarity: 'SR', emoji: '🧠', power: 2800 },
+            { id: 'sr_3', name: '[SR] 수상한 상자', rarity: 'SR', emoji: '📦', power: 2500 },
+            // R (30%)
+            { id: 'r_1', name: '[R] 분노한 외계인', rarity: 'R', emoji: '👽', power: 800 },
+            { id: 'r_2', name: '[R] 로봇 청소기', rarity: 'R', emoji: '🤖', power: 750 },
+            // N (51.5%)
+            { id: 'n_1', name: '[N] 평범한 돌멩이', rarity: 'N', emoji: '🪨', power: 100 },
+            { id: 'n_2', name: '[N] 그냥 나뭇잎', rarity: 'N', emoji: '🍃', power: 50 }
+        ];
+
+        let state = {
+            gems: 10000,
+            gold: 0,
+            pity: 0, // MAX 100
+            inventory: {}, // id -> count
+            minedGems: 0
+        };
+
+        /* ==========================================================================
+           2. WEB AUDIO API SYNTHESIZER (NO EXTERNAL FILES REQUIRED)
+           ========================================================================== */
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            const now = audioCtx.currentTime;
+
+            if (type === 'click') {
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(600, now + 0.05);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.05);
+                osc.start(now); osc.stop(now + 0.05);
+            } else if (type === 'charge') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.linearRampToValueAtTime(800, now + 1.2);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.linearRampToValueAtTime(0.3, now + 1.2);
+                osc.start(now); osc.stop(now + 1.2);
+            } else if (type === 'ssr') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, now); // C5
+                osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+                gain.gain.setValueAtTime(0.4, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+                osc.start(now); osc.stop(now + 0.6);
+            } else if (type === 'ur') {
+                // Dramatic Explosion/Fanfare Effect
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(100, now);
+                osc.frequency.linearRampToValueAtTime(1200, now + 0.4);
+                gain.gain.setValueAtTime(0.5, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 1.0);
+                osc.start(now); osc.stop(now + 1.0);
+            }
+        }
+
+        /* ==========================================================================
+           3. PARTICLE CANVAS SYSTEM
+           ========================================================================== */
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function createConfetti(x, y, count = 30) {
+            const colors = ['#00f3ff', '#ff007f', '#ffe600', '#a100ff', '#ffffff'];
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: x || canvas.width / 2,
+                    y: y || canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 12,
+                    vy: (Math.random() - 0.8) * 12,
+                    size: Math.random() * 8 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    alpha: 1,
+                    life: Math.random() * 0.02 + 0.015
+                });
+            }
+        }
+
+        function updateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.2; // Gravity
+                p.alpha -= p.life;
+
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, p.alpha);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+                ctx.restore();
+
+                if (p.alpha <= 0) particles.splice(index, 1);
+            });
+            requestAnimationFrame(updateParticles);
+        }
+        updateParticles();
+
+        /* ==========================================================================
+           4. GACHA CORE LOGIC & PITY SYSTEM
+           ========================================================================== */
+        function getRandomRarity() {
+            state.pity++;
+            if (state.pity >= 100) {
+                state.pity = 0;
+                return 'UR'; // Pity Guarantee
+            }
+
+            const rand = Math.random() * 100;
+            if (rand < 0.5) { state.pity = 0; return 'UR'; }
+            if (rand < 3.5) return 'SSR';
+            if (rand < 18.5) return 'SR';
+            if (rand < 48.5) return 'R';
+            return 'N';
+        }
+
+        function pullGacha(count) {
+            const cost = count * 160;
+            if (state.gems < cost) {
+                showToast("💎 보석이 부족합니다! 광산에서 채굴하세요.");
+                return;
+            }
+
+            state.gems -= cost;
+            updateUI();
+
+            const results = [];
+            let highestRarity = 'N';
+            const rarityOrder = { 'N': 1, 'R': 2, 'SR': 3, 'SSR': 4, 'UR': 5 };
+
+            for (let i = 0; i < count; i++) {
+                const rarity = getRandomRarity();
+                const filteredDB = CHARACTER_DB.filter(c => c.rarity === rarity);
+                const picked = filteredDB[Math.floor(Math.random() * filteredDB.length)];
+
+                // Add to inventory
+                state.inventory[picked.id] = (state.inventory[picked.id] || 0) + 1;
+                results.push(picked);
+
+                if (rarityOrder[rarity] > rarityOrder[highestRarity]) {
+                    highestRarity = rarity;
+                }
+            }
+
+            triggerCutscene(highestRarity, results);
+        }
+
+        /* ==========================================================================
+           5. DRAMATIC CUTSCENE & OVERLAY
+           ========================================================================== */
+        function triggerCutscene(highestRarity, results) {
+            const overlay = document.getElementById('gachaOverlay');
+            const stage = document.getElementById('cutsceneStage');
+            const resultScreen = document.getElementById('resultScreen');
+            const door = document.getElementById('cutsceneDoor');
+            const text = document.getElementById('cutsceneText');
+
+            overlay.style.display = 'flex';
+            stage.style.display = 'block';
+            resultScreen.style.display = 'none';
+
+            text.textContent = "소환 에너지 응축 중...";
+            door.style.borderColor = "#333";
+            door.style.boxShadow = "0 0 10px #000";
+
+            playSound('charge');
+
+            setTimeout(() => {
+                // Color escalation depending on highest pulled rarity
+                if (highestRarity === 'UR') {
+                    door.style.borderColor = "var(--ur-color)";
+                    door.style.boxShadow = "0 0 50px var(--ur-color)";
+                    text.textContent = "🌈 !!! UR 등급 감지 !!! 🌈";
+                    document.body.classList.add('shake-screen');
+                    playSound('ur');
+                } else if (highestRarity === 'SSR') {
+                    door.style.borderColor = "var(--gold-neon)";
+                    door.style.boxShadow = "0 0 35px var(--gold-neon)";
+                    text.textContent = "✨ SSR 등급 발견! ✨";
+                    playSound('ssr');
+                } else {
+                    door.style.borderColor = "var(--primary-neon)";
+                    door.style.boxShadow = "0 0 20px var(--primary-neon)";
+                    text.textContent = "소환 완료!";
+                }
+            }, 1000);
+
+            setTimeout(() => {
+                document.body.classList.remove('shake-screen');
+                stage.style.display = 'none';
+                resultScreen.style.display = 'flex';
+                renderResults(results);
+                createConfetti(window.innerWidth / 2, window.innerHeight / 2, 80);
+            }, 2200);
+        }
+
+        function renderResults(results) {
+            const grid = document.getElementById('resultGrid');
+            grid.innerHTML = '';
+
+            results.forEach(item => {
+                const card = document.createElement('div');
+                card.className = `card-item ${item.rarity}`;
+                card.innerHTML = `
+                    <span class="badge-rarity badge-${item.rarity}">${item.rarity}</span>
+                    <div class="card-emoji">${item.emoji}</div>
+                    <div class="card-name">${item.name}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function closeGachaOverlay() {
+            document.getElementById('gachaOverlay').style.display = 'none';
+            updateUI();
+            renderCollection();
+        }
+
+        /* ==========================================================================
+           6. MINING / CLICKER MECHANIC
+           ========================================================================== */
+        function clickMine(e) {
+            playSound('click');
+            const earned = Math.floor(Math.random() * 5) + 10;
+            state.gems += earned;
+            state.minedGems += earned;
+
+            createConfetti(e.clientX, e.clientY, 8);
+            updateUI();
+        }
+
+        /* ==========================================================================
+           7. UI RENDERERS & HELPERS
+           ========================================================================== */
+        function updateUI() {
+            document.getElementById('gemDisplay').textContent = state.gems.toLocaleString();
+            document.getElementById('goldDisplay').textContent = state.gold.toLocaleString();
+            document.getElementById('pityFill').style.width = `${state.pity}%`;
+            document.getElementById('pityCount').textContent = 100 - state.pity;
+            document.getElementById('minedGemsText').textContent = state.minedGems.toLocaleString();
+
+            const ownedCount = Object.keys(state.inventory).length;
+            document.getElementById('collectionCount').textContent = `${ownedCount}/${CHARACTER_DB.length}`;
+        }
+
+        function renderCollection() {
+            const grid = document.getElementById('gridContainer');
+            grid.innerHTML = '';
+
+            CHARACTER_DB.forEach(item => {
+                const count = state.inventory[item.id] || 0;
+                const card = document.createElement('div');
+                card.className = `card-item ${item.rarity} ${count === 0 ? 'unowned' : ''}`;
+                card.innerHTML = `
+                    <span class="badge-rarity badge-${item.rarity}">${item.rarity}</span>
+                    <div class="card-emoji">${item.emoji}</div>
+                    <div class="card-name">${item.name}</div>
+                    <div class="card-count">${count > 0 ? `보유: ${count}개` : '미보유'}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function switchTab(tabName) {
+            playSound('click');
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(`${tabName}Panel`).classList.add('active');
+
+            if (tabName === 'collection') renderCollection();
+        }
+
+        function showToast(msg) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = msg;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Init Setup
+        updateUI();
+    </script>
+</body>
+</html>            border-bottom: 5px solid #ff00ff;
             box-shadow: 0 0 35px #ff00ff;
             overflow: hidden;
         }
